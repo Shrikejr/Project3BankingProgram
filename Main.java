@@ -30,9 +30,9 @@ class BankAccount {
   }
 
   void displayLastTransaction() {
-    if (previousTransaction > 0) {
+    if (lastTransaction > 0) {
       System.out.println("Deposited: " + lastTransaction);
-    } else if (previousTransaction < 0) {
+    } else if (lastTransaction < 0) {
       System.out.println("Withdrawn: " + lastTransaction);
     } else {
       System.out.println("You didn't do anything! Changed your mind?");
