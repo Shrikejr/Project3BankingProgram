@@ -1,28 +1,33 @@
-import java.util.Scanner;
+import java.util.*;
+import java.text.*;
+
 class Main {
   public static void main(String[] args) {
-    BankAccount samplePatron = new BankAccount("290v3m", "Elias Bouchard");
+    BankAccount samplePatron = new BankAccount("290v3m", "Elias Bouchard", 8.96);
     samplePatron.displayMenu();
   }
 }
 class BankAccount {
-  int currentBalance;
-  int lastTransaction;
+  double currentBalance;
+  double lastTransaction;
+  double accountRate;
   String accountName;
   String accountID;
+  NumberFormat us = NumberFormat.getCurrencyInstance(Locale.US);
 
-  BankAccount(String aID, String aN) {
+  BankAccount(String aID, String aN, double aR) {
     accountID = aID;
     accountName = aN;
+    accountRate = aR;
   }
-  void deposit(int amount) {
+  void deposit(double amount) {
     if (amount > 0) {
       currentBalance = currentBalance + amount;
       lastTransaction = amount;
     }
   }
 
-  void withdrawal(int amount) {
+  void withdrawal(double amount) {
     if ((amount > 0) & ((currentBalance - amount) > 0)) {
       currentBalance = currentBalance - amount;
       lastTransaction = -amount;
@@ -39,6 +44,12 @@ class BankAccount {
     }
   }
 
+  public double calculateSavings(double principle, int years, double rate) {
+    double totalAmount = 0;
+    totalAmount = principle * ((1 + rate / 100) * (1 + rate / 100) * (1 + rate / 100));
+    return totalAmount;
+  }
+
   void displayMenu() {
     int options = 0;
     Scanner scanner = new Scanner(System.in);
@@ -49,7 +60,8 @@ class BankAccount {
     System.out.println("2) Deposit");
     System.out.println("3) Withdraw");
     System.out.println("4) Previous Transaction Details");
-    System.out.println("5) Close");
+    System.out.println("5) Calculate Current Compound Interest");
+    System.out.println("6) Close");
 
 
     do {
@@ -65,14 +77,14 @@ class BankAccount {
       case 2:
         System.out.println("\n");
         System.out.println("Enter Amount to Deposit: ");
-        int amountD = scanner.nextInt();
+        double amountD = scanner.nextDouble();
         deposit(amountD);
         break;
       
       case 3:
         System.out.println("\n");
         System.out.println("Enter Amount to Withdraw: ");
-        int amountW = scanner.nextInt();
+        double amountW = scanner.nextDouble();
         deposit(amountW);
         break;
 
@@ -83,13 +95,24 @@ class BankAccount {
         break;
       
       case 5:
+        System.out.println("\n");
+        System.out.println("Welcome to the Compound Interest Calculator! This nifty widget lets you see how much money could be in your specific account after a certain amount of years!");
+        System.out.println("(Don't worry, we already know the amount in your account and your savings rate!)");
+        System.out.println("\n");
+        System.out.println("Enter Time in Years: ");
+        int yearsCI = scanner.nextInt();
+        System.out.println("The amount in your account after " + yearsCI + " years will be: ");
+        System.out.println(us.format(calculateSavings(currentBalance, yearsCI, accountRate)));
+        break;
+      
+      case 6:
         break;
 
       default:
         System.out.println("That option isn't valid. Try again, butterfingers.");
 
     }
-    } while (options != 5);
+    } while (options != 6);
     System.out.println("Thanks for using our services at the world's least secure bank. Have a good one!");
   }
 }
